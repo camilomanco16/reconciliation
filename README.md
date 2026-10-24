@@ -17,3 +17,11 @@ validaciones que haría
 corrección propuesta
 inicialmente actualizaria de manera manual los pagos mas criticos de la mano de soporte y el proveedor de pagos como solucion inmediata en caso de ser necesario y viable porque si son cientos de pagos no seria muy viable. 
 luego agregaria reglas de validacion al sistema para que valide si exiten debitos antes de crear otros, esto se podria hacer mediantes stored procedures para agregar las reglas de validacion directamente en la base de datos y no por codigo, esto tambien facilitaria actualizaciones a futuro ya que solo se deberia actualizar el SP y el codigo unicamente lo llamaria y corregiria la logica en reintentos por timeout teniendo en cuenta que puede pasar que los eventos lleguen tarde.
+## Registro de ayudas de IA
+
+Aquí se registra cada ayuda recibida de un asistente de IA (Claude Code) durante el desarrollo: qué se pidió, qué se generó y qué decisiones se tomaron.
+
+| Fecha | Solicitud | Qué se generó / cambió | Decisiones y notas |
+|-------|-----------|------------------------|--------------------|
+| 2026-10-23 | Crear esquema y datos de prueba en H2 compatibles con Oracle, y configurar la carga al arrancar | `src/main/resources/schema.sql` (tablas PAYMENT, PROVIDER_EVENT, LEDGER_ENTRY, SUPPORT_AUDIT), `src/main/resources/data.sql` (casos PAY-AX91, PAY-BX17, PAY-CQ22, PAY-DK44) y `application.properties` (H2 en `MODE=Oracle`, scripts al arrancar, consola en `/h2-console`) | Tipos de Oracle (`VARCHAR2`, `NUMBER`), restricciones con nombre y `CHECK` para los estados. Se añadieron índices por `payment_id` y secuencias que empiezan en 100 (no pedidos). Fechas relativas al arranque (`LOCALTIMESTAMP - INTERVAL`) para que siempre caigan en las últimas 24 h. `ddl-auto=none` para que Hibernate no toque el esquema. Verificado con `mvnw test` y una consulta en H2 |
+| 2026-10-23 | Crear en el README un apartado para registrar las ayudas de IA | Esta sección | Cada ayuda nueva se añade como una fila a esta tabla |
